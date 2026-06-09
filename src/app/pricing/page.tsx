@@ -35,6 +35,10 @@ export default async function PricingPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // 還沒設定 Stripe 金鑰時，先只提供免費版（隱藏付費升級）
+  const stripeEnabled =
+    !!process.env.STRIPE_SECRET_KEY && !!process.env.STRIPE_PRICE_PRO;
+
   return (
     <main className="min-h-screen">
       <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto">
@@ -85,8 +89,12 @@ export default async function PricingPage() {
                 >
                   {p.cta}
                 </Link>
-              ) : (
+              ) : stripeEnabled ? (
                 <CheckoutButton loggedIn={!!user} />
+              ) : (
+                <div className="block rounded-xl border border-dashed border-slate-300 py-3 text-center text-sm text-slate-400">
+                  即將開放
+                </div>
               )}
             </div>
           </div>

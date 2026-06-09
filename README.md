@@ -74,7 +74,9 @@ npm run dev                  # http://localhost:3000
 2. **Domains** 裡新增並驗證 `susucloud.site`（在 GoDaddy 加它給的 DNS 記錄）。
 3. `EMAIL_FROM` 設成 `優惠機票通知 <alerts@susucloud.site>`。
 
-### 4. Stripe（訂閱金流）
+### 4. Stripe（訂閱金流）— ⏭️ 可先略過
+
+> **第一次部署可以先跳過這一步。** 不填 Stripe 金鑰時，網站照常運作，只是價格頁的「升級 Pro」會顯示「即將開放」，所有人都是免費版（可追蹤 1 條航線）。等之後要開始收錢再回來補。
 
 1. 到 [stripe.com](https://stripe.com) 註冊。
 2. 建立一個 **Product → 經常性價格（每月）**，例如 NT$199 / 月 → 複製 price id → `STRIPE_PRICE_PRO`。
@@ -93,7 +95,8 @@ npm run dev                  # http://localhost:3000
 
 1. 把這個 repo 連到 [Vercel](https://vercel.com)，Import 專案。
 2. **Settings → Environment Variables** 把 `.env.local` 裡的每一個變數都填進去。
-3. Deploy。Vercel 會自動讀 `vercel.json`，把 **Cron 排程**（預設每 6 小時）建好。
+3. Deploy。Vercel 會自動讀 `vercel.json`，把 **Cron 排程**建好。
+   > ⚠️ **Vercel 免費（Hobby）方案的 Cron 一天只能跑一次**，所以 `vercel.json` 已設成每天一次（`0 0 * * *`）。如果改成更頻繁（例如每 6 小時），部署時會出現「需要 Pro 方案」的提示。等升級 Vercel Pro 後再把它改密集即可。
 4. **接網域**：Vercel **Settings → Domains** 輸入 `susucloud.site` → Vercel 會給你 DNS 設定。
    到 **GoDaddy → 你的網域 → DNS**：
    - 加一筆 `A` 記錄 `@` → `76.76.21.21`（依 Vercel 畫面為準）

@@ -5,6 +5,11 @@ import { getStripe } from "@/lib/stripe";
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export async function POST() {
+  // 尚未設定 Stripe 時直接回友善訊息（先略過金流）
+  if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_PRICE_PRO) {
+    return NextResponse.json({ error: "付費升級尚未開放" }, { status: 503 });
+  }
+
   const supabase = createClient();
   const {
     data: { user },
